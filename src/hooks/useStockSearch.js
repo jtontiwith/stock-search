@@ -35,10 +35,14 @@ const useStockSearch = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   useEffect(() => {
     const fetchData = async () => {
-      const res = await axios(
-        `https://api.polygon.io/v2/aggs/ticker/${state.activeSearch}/prev?adjusted=true&apiKey=VvxgpETfqVOeHkmhfN8qRYpy_p0NlyEw`
-      );
-      dispatch({ type: 'set_stock_data', payload: res.data.results[0] });
+      try {
+        const res = await axios(
+          `https://api.polygon.io/v2/aggs/ticker/${state.activeSearch}/prev?adjusted=true&apiKey=VvxgpETfqVOeHkmhfN8qRYpy_p0NlyEw`
+        );
+        dispatch({ type: 'set_stock_data', payload: res.data.results[0] });
+      } catch (err) {
+        console.error(err);
+      }
     };
     if (state.activeSearch.length) fetchData();
   }, [state.activeSearch]);
